@@ -1,0 +1,8 @@
+必须加eureka.instance.hostname=localhost
+设定eureka-server实例的url。默认为8675
+
+注册高可用的注册中心，	构建双节点的服务注册中心时要打开以下设置，让服务注册中心可以被注册，单节点时要关闭
+#eureka.client.register-with-eureka=false
+#eureka.client.fetch-registry=false
+不用主机名来定义注册中心，用ip的话需要配置一下配置，默认为false
+eureka.instance.prefer-ip-address=true
