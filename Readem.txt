@@ -1,8 +1,39 @@
 必须加eureka.instance.hostname=localhost
 设定eureka-server实例的url。默认为8675
 
-注册高可用的注册中心，	构建双节点的服务注册中心时要打开以下设置，让服务注册中心可以被注册，单节点时要关闭
+注册高可用的注册中心，	构建双节点的服务注册中心时要打开以下设置，让服务注册中心可以被注册，单节点时要关闭(定义了独立的region和独立的zone时需要设置参数)
 #eureka.client.register-with-eureka=false
 #eureka.client.fetch-registry=false
 不用主机名来定义注册中心，用ip的话需要配置一下配置，默认为false
 eureka.instance.prefer-ip-address=true
+
+开发时将注册中心的保护机制关闭（解决Eureka Server不踢除已关停的节点的问题）
+eureka.server.enable-self-preservation=false
+
+定义服务续约任务的调用时间（心跳）默认30s
+eureka.instance.lease-renewal-interval-in-seconds=30
+定义服务时效时间，默认90s（表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。）
+eureka.instance.lease-expiration-duration-in-seconds=
+
+我们可以简单地将region理解为Eureka集群，zone理解成机房
+优先访问处于同一zone中的实例，如没有可用服务再去找其他zone
+
+采用以下形式来默认端口
+server.port=${random.int[8888,9999]}
+表示从“发现”服务器获取注册表信息的频率（以秒为单位）
+#将客户端的健康管理交给actuator管理，默认ide不提示
+eureka.client.healthcheck.enable=true
+表示从“发现”服务器获取注册表信息的频率（以秒为单位）
+eureka.client.registry-fetch-interval-seconds 
+表示复制实例更改的频率（以秒为单位），以复制到发现服务的服务器。默认30s。
+eureka.client.instance-info-replication-interval-seconds 
+#（代表是5秒，单位是毫秒,清理失效服务的间隔 ）
+eureka.server.eviction-interval-timer-in-ms=5000
+
+#actuator的metrics接口是否需要安全保证
+endpoints.metrics.sensitive=false   
+endpoints.metrics.enabled=true
+
+#actuator的health接口是否需要安全保证
+endpoints.health.sensitive=false  
+endpoints.health.enabled=true
